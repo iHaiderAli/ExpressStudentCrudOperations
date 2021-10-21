@@ -1,47 +1,78 @@
-import { v4 as uuidv4 } from "uuid";
-let users = []
+import connection from '../config/db.js';
+
+export const createDataBase = (req, res) => {
+    let sql = "CREATE DATABASE students";
+    connection.query(sql, (error) => {
+        if (error) {
+            throw error
+        }
+        res.send('database created')
+    })
+}
+
+export const createTable = (req, res) => {
+    let sql = "CREATE TABLE student(id int AUTO_INCREMENT, name VARCHAR(255), PRIMARY KEY(id))";
+    connection.query(sql, (error) => {
+        if (error) {
+            throw error
+        }
+        res.send('Student table created')
+    })
+}
 
 export const getStudents = (req, res) => {
-    console.log(users)
-    res.send(users)
+    let sql = "SELECT * FROM student";
+    connection.query(sql, (error, results) => {
+        if (error) {
+            throw error
+        }
+        console.log(results)
+        res.send(results)
+    })
 }
+
 export const createStudent = (req, res) => {
 
     const user = req.body;
-    const userWithId = { ...user, id: uuidv4() }
-    users.push(userWithId);
-
-    res.send('Student Added successfully')
-
-}
-
-export const getStudentById = (req, res) => {
-
-    const { id } = req.params;
-    const foundUser = users.find((user) => user.id === id);
-    res.send(foundUser)
+    let sql = "INSERT INTO student SET ?";
+    connection.query(sql, user, (error) => {
+        if (error) {
+            throw error
+        }
+        res.send('Student Added successfully')
+    })
 
 }
 
 export const deleteStudent = (req, res) => {
 
-    const { id } = req.params;
-    users = users.filter((user) => user.id !== id);
-    res.send('Student has been deleted')
-
+    let sql = `DELETE FROM student WHERE id = ${req.params.id}`
+    connection.query(sql, error => {
+        if (error) {
+            throw error
+        }
+        res.send('Students deleted successfully')
+    })
 }
 
 export const updateStudent = (req, res) => {
 
-    const { id } = req.params;
-    const { firstName, lastName, age } = req.body;
+    connection.query('UPDATE `student` SET `first_name`=?,`last_name`=?,`age`=? where `id`=?', [req.body.first_name, req.body.last_name, req.body.age, req.params.id], function (error, results, fields) {
+        if (error) throw error;
+        res.send('Students updated successfully')
+    });
 
-    const user = users.find((user) => user.id === id);
+}
 
-    if (firstName) user.firstName = firstName;
-    if (lastName) user.lastName = lastName;
-    if (age) user.age = age;
+export const getStudentById = (req, res) => {
+    let sql = `SELECT * FROM student WHERE id = ${req.params.id}`
 
-    res.send('Student has been updated')
+    connection.query(sql, (error, results) => {
+        if (error) {
+            throw error
+        }
+        console.log(results)
+        res.send(results)
+    })
 
 }
