@@ -13,7 +13,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodeman": "^1.1.2"
   },
   "devDependencies": {}
 }
