@@ -57,7 +57,7 @@ export const deleteStudent = (req, res) => {
 
 export const updateStudent = (req, res) => {
 
-    connection.query('UPDATE `student` SET `first_name`=?,`last_name`=?,`age`=? where `id`=?', [req.body.first_name, req.body.last_name, req.body.age, req.params.id], function (error, results, fields) {
+    connection.query('UPDATE `student` SET `first_name`=?,`last_name`=?,`age`=?,`dob`=?,`gender`=? where `id`=?', [req.body.first_name, req.body.last_name, req.body.age, req.body.dob, req.body.gender, req.params.id], function (error, results, fields) {
         if (error) throw error;
         res.send('Students updated successfully')
     });
