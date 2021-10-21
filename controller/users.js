@@ -1,4 +1,5 @@
 import connection from '../config/db.js';
+import { validationResult } from 'express-validator';
 
 export const createDataBase = (req, res) => {
     let sql = "CREATE DATABASE students";
@@ -21,58 +22,105 @@ export const createTable = (req, res) => {
 }
 
 export const getStudents = (req, res) => {
-    let sql = "SELECT * FROM student";
-    connection.query(sql, (error, results) => {
-        if (error) {
-            throw error
-        }
-        console.log(results)
-        res.send(results)
-    })
+
+    try {
+
+        let sql = "SELECT * FROM student";
+        connection.query(sql, (error, results) => {
+            if (error) {
+                throw error
+            }
+            console.log(results)
+            res.status(200).send(results)
+        })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+
 }
 
 export const createStudent = (req, res) => {
 
-    const user = req.body;
-    let sql = "INSERT INTO student SET ?";
-    connection.query(sql, user, (error) => {
-        if (error) {
-            throw error
-        }
-        res.send('Student Added successfully')
-    })
+    try {
 
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
+        }
+
+        const user = req.body;
+
+        let sql = "INSERT INTO student SET ?";
+        connection.query(sql, user, (error) => {
+            if (error) {
+                throw error
+            }
+            res.status(200).send("success")
+        })
+
+    } catch (e) {
+        res.status(400).send(e)
+    }
 }
 
 export const deleteStudent = (req, res) => {
 
-    let sql = `DELETE FROM student WHERE id = ${req.params.id}`
-    connection.query(sql, error => {
-        if (error) {
-            throw error
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
         }
-        res.send('Students deleted successfully')
-    })
+
+        let sql = `DELETE FROM student WHERE id = ${req.params.id}`
+        connection.query(sql, error => {
+            if (error) {
+                throw error
+            }
+            res.status(200).send('Students deleted successfully')
+        })
+    } catch (e) {
+        res.status(400).send(e)
+    }
 }
 
 export const updateStudent = (req, res) => {
 
-    connection.query('UPDATE `student` SET `first_name`=?,`last_name`=?,`age`=?,`dob`=?,`gender`=? where `id`=?', [req.body.first_name, req.body.last_name, req.body.age, req.body.dob, req.body.gender, req.params.id], function (error, results, fields) {
-        if (error) throw error;
-        res.send('Students updated successfully')
-    });
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
+        }
+
+        connection.query('UPDATE `student` SET `first_name`=?,`last_name`=?,`age`=?,`dob`=?,`gender`=? where `id`=?', [req.body.first_name, req.body.last_name, req.body.age, req.body.dob, req.body.gender, req.params.id], function (error, results, fields) {
+            if (error) throw error;
+            res.status(200).send('Students updated successfully')
+        });
+    } catch (e) {
+        res.status(400).send(e)
+    }
 
 }
 
 export const getStudentById = (req, res) => {
-    let sql = `SELECT * FROM student WHERE id = ${req.params.id}`
 
-    connection.query(sql, (error, results) => {
-        if (error) {
-            throw error
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
         }
-        console.log(results)
-        res.send(results)
-    })
+
+        let sql = `SELECT * FROM student WHERE id = ${req.params.id}`
+
+        connection.query(sql, (error, results) => {
+            if (error) {
+                throw error
+            }
+            console.log(results)
+            res.status(200).send(results)
+        })
+
+    } catch (e) {
+        res.status(400).send(e)
+    }
 
 }

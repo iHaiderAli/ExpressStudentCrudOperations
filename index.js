@@ -9,7 +9,7 @@ const PORT = 8000;
 //initilizing body parser & we are going to user JSON data in our application
 app.use(bodyParser.json());
 
-app.use('/', usersRoute)
+app.use('/una', usersRoute)
 
 //Routers which we can vistir from our browser or we send requests to
 app.get('/', (req, res) => {
