@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,9 @@
     "express": "^4.17.1",
     "mysql": "^2.18.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  },
   "engines": {
     "node": "14.16.0"
   }
